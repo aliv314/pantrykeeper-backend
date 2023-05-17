@@ -27,7 +27,8 @@ exports.postPantry = async (req, res) => {
 
         const pantryObj = newPantry(req.body.ownerId, req.body.ownerName, req.body.pantryName, '', 0, 0, 0);
         const result = await db.collection('pantries').add(pantryObj);
-        res.status(200).json(pantryObj);
+        console.log(result.id);
+        res.status(200).json({pantry_id: result.id, ...pantryObj});
     }catch(error){
         console.log(error);
         res.status(400).send("Error posting new pantry.");
@@ -66,7 +67,7 @@ exports.putPantry = async (req, res) => {
 
 exports.delPantry = async(req, res) => {
     try{
-        const pantryRef = await db.collection('pantries').doc(res.params.id);
+        const pantryRef = await db.collection('pantries').doc(req.params.id);
         const result = pantryRef.delete();
         
         res.status(200).send('Success!');

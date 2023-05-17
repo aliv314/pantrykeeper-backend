@@ -47,12 +47,18 @@ exports.postFoods = async (req, res) => {
         //Get array of foods
         const foodsArray = req.body.foods;
         //Create a response array
-        const foodsRes = foodsArray.map( (food) => {
-            const foodObj = newFood(food.name, '', Date.now(), 1, food.type, food.user);
-            const result = foodsRef.doc(food.name).set(foodObj);
+        const foodsPost = await Promise.all(foodsArray.map( async (food) => {
+            let foodObj = newFood(food.name, '', Date.now(), 1, food.type, food.user);
+            const result = await foodsRef.add(foodObj);
+
+            foodObj = {food_id: await result.id, ...foodObj};
             return foodObj;
-        })
-        res.status(200).json(foodsRes);
+        })).catch(err => {
+            console.log(err);
+            res.status(400).send("Failed to write new food obj");
+        })   
+
+        res.status(200).json(foodsPost);
     }catch (err) {
         console.log(err)
         res.status(400).send("Failed to write new food obj");
