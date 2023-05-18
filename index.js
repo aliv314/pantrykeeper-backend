@@ -14,6 +14,10 @@ const usersRoutes = require('./routes/usersRouter');
 const pantriesRoutes = require('./routes/pantriesRouter');
 const foodsRoutes = require('./routes/foodsRouter');
 
+app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
+  
 app.use('/api/users', usersRoutes);
 app.use('/api/pantries', pantriesRoutes);
 // app.use('/api/friends');
