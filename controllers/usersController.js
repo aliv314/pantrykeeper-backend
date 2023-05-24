@@ -10,12 +10,6 @@ function newUser(friendCode) {
 //RES: [{PANTRYOBJ}]
 exports.getUserPantries = async(req, res) => {
     try{
-        const userRef = await db.collection('users').doc(req.params.id);
-        const userSnapshot = await userRef.get();
-
-        if(!userSnapshot.exists){
-            return res.send("User not found.");
-        }
         const pantriesRef = await db.collection('pantries').where('owner_id', '==', req.params.id);
         const pantriesSnapshot = await pantriesRef.get();
         if(pantriesSnapshot.exists){
