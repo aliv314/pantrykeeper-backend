@@ -47,17 +47,28 @@ exports.postFoods = async (req, res) => {
         //Get array of foods
         const foodsArray = req.body.foods;
         //Create a response array
+        //Post each newfood using Promise.all
         const foodsPost = await Promise.all(foodsArray.map( async (food) => {
             let foodObj = newFood(food.name, '', Date.now(), 1, food.type, food.user);
-            const result = await foodsRef.add(foodObj);
-
+            const result = await foodsRef.doc(String(food.name).toLowerCase().replaceAll(' ', '')).set(foodObj);
             foodObj = {food_id: await result.id, ...foodObj};
             return foodObj;
-        })).catch(err => {
+        }
+        )).catch(err => {
             console.log(err);
             res.status(400).send("Failed to write new food obj");
         })   
 
+        //Count how many items, ingredients, and leftovers were added.
+        const numberFoods = await pantryRef.collection("foods").count().get()
+        const numberDishes = await pantryRef.collection("foods").where("food_type", "==", "dish").count().get()
+        const numberIngredients = await pantryRef.collection("foods").where("food_type", "==", "ingredient").count().get()
+        const numberItemsObj = {
+            num_dishes: numberDishes.data().count,
+            num_foods: numberFoods.data().count,
+            num_ingredients: numberIngredients.data().count 
+        }
+        const updatePantry  = pantryRef.update(numberItemsObj);
         res.status(200).json(foodsPost);
     }catch (err) {
         console.log(err)
