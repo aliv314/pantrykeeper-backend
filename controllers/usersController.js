@@ -6,27 +6,6 @@ function newUser(friendCode) {
     }
 }
 
-//REQ: id
-//RES: [{PANTRYOBJ}]
-exports.getUserPantries = async(req, res) => {
-    try{
-        const pantriesRef = await db.collection('pantries').where('owner_id', '==', req.params.id);
-        const pantriesSnapshot = await pantriesRef.get();
-        if(pantriesSnapshot.exists){
-            return res.status(200).json([]);
-        }
-        let pantries = []
-        pantriesSnapshot.forEach( (pantry) => {
-            pantries.push({pantry_id: pantry.id,
-                ...pantry.data()});
-        });
-        res.status(200).json(pantries);
-    }catch(error){
-        console.log(error)
-        res.status(404).send("Error getting pantries.")
-    }
-}
-
 //Posts user Friend code to 
 exports.postUser = async (req, res) => {
     try{
