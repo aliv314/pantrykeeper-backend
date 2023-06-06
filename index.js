@@ -15,13 +15,13 @@ const pantriesRoutes = require('./routes/pantriesRouter');
 const foodsRoutes = require('./routes/foodsRouter');
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.json({status:'Ready'});
   })
   
 app.use('/api/users', usersRoutes);
 app.use('/api/pantries', pantriesRoutes);
-// app.use('/api/friends');
 app.use('/api/foods', foodsRoutes);
+// app.use('/api/friends');
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
