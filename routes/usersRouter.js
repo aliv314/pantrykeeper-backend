@@ -5,5 +5,5 @@ router.route('/')
 .post(usersController.postUser);
 
 router.route('/:id')
-.get(usersController.getUserPantries);
+.get(usersController.getPantries);
 module.exports = router;
