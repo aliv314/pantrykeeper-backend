@@ -6,18 +6,20 @@ exports.getPantries = async(req, res) => {
     try{
         const pantriesRef = await db.collection('pantries').where('owner_id', '==', req.params.id);
         const pantriesSnapshot = await pantriesRef.get();
-        const pantriesData = []
-        await Promise.all(pantriesSnapshot.docs.map( (pantry) => {
-            pantriesData.push({pantry_id: pantry.id,
-                ...pantry.data()});
-        })).catch(error => {
-            console.log(error);
+        if (pantriesSnapshot.exists){
+            return res.status(200).json([])
+        }
+        let pantries = [];
+        pantriesSnapshot.forEach( (pantry) => {
+            pantries.push({
+                pantry_id: pantry.id,
+                ...pantry.data() 
+            })
         })
-
-        res.status(200).json(pantriesData);
+        return res.status(200).json(pantries);
     }catch(error){
         console.log(error)
-        res.status(404).send("Error getting pantries.")
+        return res.status(404).send("Error getting pantries.")
     }
 }   
 
