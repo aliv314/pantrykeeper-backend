@@ -50,7 +50,7 @@ exports.postFoods = async (req, res) => {
         //Post each newfood using Promise.all
         const foodsPost = await Promise.all(foodsArray.map( async (food) => {
             let foodObj = newFood(food.name, '', Date.now(), 1, food.type, food.user);
-            const foodId = String(food.name).toLowerCase().replaceAll(' ', '')
+            const foodId =((String(food.name)).toLowerCase()).replaceAll(' ', '')
             const result = await foodsRef.doc(foodId).set(foodObj);
             foodObj = {food_id: await foodId, ...foodObj};
             return foodObj;
