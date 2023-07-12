@@ -57,7 +57,7 @@ exports.postFoods = async (req, res) => {
         }
         )).catch(err => {
             console.log(err);
-            res.status(400).send("Failed to write new food obj");
+            res.status(400).send("Failed to write new food obj", err);
         })   
 
         //Count how many items, ingredients, and leftovers were added.
